@@ -51,7 +51,7 @@ Remover containers:
    docker run hello-world
 ```
 
-### Criação do Container e instalação da imagem MySQL:
+### Criação de senhas e porta para o MySQL
 
 ```js
    docker run -e MYSQL_ROOT_PASSWORD=root -p 3310:3306 --rm --name=mysql  mysql:8.0
