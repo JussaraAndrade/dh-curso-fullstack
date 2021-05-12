@@ -1,80 +1,42 @@
 const router = require('express').Router()
-const Sequelize = require('sequelize')
+const UsersModel = require('./model')
+const Validator = require('../validator')
+const ProdutosModel = require('../produtos/model')
 
-const db = require('../db')
-
-const UserSchema = db.define('usuarios', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    nome:{
-        type: Sequelize.STRING(100),
-        allowNull: false
-    },
-    email: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-        validate: {
-            isEmail: true
-        }
+let requiredFields = {
+    nome: {
+        required: true
     },
     cpf: {
-        type: Sequelize.STRING(100),
-        allowNull: false
+        required: true
+    },
+    email: {
+        required: true
     }
-})
-
-// Validação usuário
-const validateUser = (req, res, next) => {
-    //let requiredFields = ['nome', 'idade', 'cpf', 'email'] usa on no for
-    let requiredFields = {
-        nome: {
-            required: true,
-        },
-        email: {
-            required: true,
-        },
-        cpf: {
-            required: true,
-        }
-    }
-
-    let { body } = req
-    // in - usa em objeto
-    for(let field in requiredFields){
-        if(!body[field]){
-            res.status(400).send(`O campo ${field} é obrigatório`)
-            return;
-        }
-    }
-
-    next()
 }
 
+const usuarioValidator = new Validator(requiredFields)
 router.get('/', async (req, res) => {
-    const usuarios = await UserSchema.findAll()
+    const usuarios = await UsersModel.findAll({include : ProdutosModel})
     res.status(200).json(usuarios)
 })
 
-router.post('/', validateUser, async(req, res) => {
-    await UserSchema.create(req.body)
+router.post('/', usuarioValidator.getValidator(), async(req, res) => {
+    await UsersModel.create(req.body)
     res.status(201).send()
 })
 
 router.delete('/:id', async(req, res) => {
     let { id } = req.params
-    await UserSchema.destroy({where: {id: id}})
-    res.send()
+    await UsersModel.destroy({where: {id: id}})
+    res.status(200).send()
 })
 
 router.put('/:id', async(req, res) => {
     let { nome, email } = req.body
     let { id } = req.params
 
-    let usuario = await UserSchema.findOne({where: {id: id}})
+    let usuario = await UsersModel.findOne({where: {id: id}})
 
     usuario.nome = nome
     usuario.email = email
@@ -82,7 +44,5 @@ router.put('/:id', async(req, res) => {
     usuario.save()
     res.status(200).json(usuario)
 })
-
-
 
 module.exports = router

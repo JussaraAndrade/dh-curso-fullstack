@@ -1,56 +1,52 @@
 const router = require('express').Router()
-const Sequelize = require('sequelize')
+const ProdutosModel = require('./model')
+const Validator = require('../validator')
 
-const db = require('../db')
-
-const UserSchema = db.define('produtos', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    preco:{
-        type: Sequelize.DOUBLE,
-        allowNull: false
-    },
-    descricao: {
-        type: Sequelize.TEXT,
-        allowNull: true
-    },
-    estoque: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+const requiredFields = {
+    nome: {
+        required: true,
+        customValidate: {
+            isValid: (nome) => {
+                return nome.length <= 100
+            },
+            msg: 'O campo nome tem um limite de 100'
+        }
     }
-})
+}
 
+const produtoValidator = new Validator(requiredFields)
+router.post('/', produtoValidator.getValidator(), async(req, res) => {
+    let { body } = req
+    await ProdutosModel.create(body)
+    res.status(201).send()
+})
 
 router.get('/', async (req, res) => {
-    const produtos = await UserSchema.findAll()
+    let produtos = await ProdutosModel.findAll({incluse: 'usuarios'})
     res.status(200).json(produtos)
-})
-
-router.post('/', async(req, res) => {
-    await UserSchema.create(req.body)
-    res.status(201).send()
 })
 
 router.delete('/:id', async(req, res) => {
     let { id } = req.params
-    await UserSchema.destroy({where: {id: id}})
-    res.send()
+    await ProdutosModel.destroy({where: {id: id}})
+    res.status(200).send()
 })
 
 router.put('/:id', async(req, res) => {
-    let {nome, preco, descricao ,estoque }
     let { id } = req.params
 
-    let produto = await UserSchema.findOne({where: {id: id}})
+    let produto = await ProdutosModel.findOne({where: {id: id}})
 
-    produto.nome = nome
-    produto.preco = preco
-    produto.descricao = descricao
-    produto.estoque = estoque
+    let {nome, descricao, preco, estoque} = req.body
+
+    produto.nome = nome ? nome : produto.nome
+    produto.descricao = descricao ? descricao : produto.descricao
+    produto.preco = preco ? preco : produto.preco
+    produto.estoque = estoque ? estoque : produto.estoque
+
+    produto.save()
+    res.status(200).json(produto)
 })
+
 
 module.exports = router
