@@ -1,0 +1,51 @@
+<p [ngStyle]="{color: contador < 3 ? 'red' : 'green'}" >Contagem: {{ contador }} </p>
+<p *ngIf="contador > 5; else menor">O contador passou de 5!</p>
+
+<h2 [ngClass]="{subtitle: contador > 7}" *ngIf="contador > 4">
+  O contador é maior que 7
+</h2>
+
+
+<ng-template #menor>
+  <p>O contador é menor que 5</p>
+</ng-template>
+
+<!--
+if(contador < 3){
+  é menor que 3
+}else{
+  é maior que 3
+}
+
+If ternário:
+contador < 3 ? 'é menor que 3' : 'é maior que 3'
+-->
+
+<!--ng switch-->
+<ul [ngSwitch]="contador">
+  <li *ngSwitchCase="3">É igual a 3</li>
+  <li *ngSwitchCase="5">É igual a 5</li>
+  <li *ngSwitchCase="8">É igual a 8</li>
+  <li *ngSwitchDefault>eu sou o default</li>
+</ul>
+
+<!--Trocar informações view > template-->
+<input type="text" placeholder="Digite algo" [(ngModel)]="text">
+
+<p>O texto é {{ text }}</p>
+
+<button (click)="incrementa()" >Incrementa</button>
+<button (click)="decrementa()" >Decrementa</button>
+
+<!-- Diretiva *ngfor-->
+<ol>
+  <li *ngFor="let pessoa of pessoas">A pessoa se chama
+    <span [ngClass]="{li: pessoa.nome === 'Ivonaldo'}" >{{pessoa.nome}} </span>
+    {{pessoa.sobrenome}} e trabalha como
+    <span *ngIf="pessoa.cargo !== 'Apresentadora';">{{pessoa.cargo}}</span>
+  </li>
+</ol>
+
+
+
+
