@@ -7,6 +7,8 @@ import { User } from '../models/user';
 @Injectable({
   providedIn: 'root'
 })
+
+// Crie a conta no site e depois coloque api no campo apiURL="..." : https://sheet.best/
 export class UsersService {
   apiUrl = "url da panilha";
   httpOptions = {
