@@ -1,0 +1,35 @@
+<html>
+    <body>
+        <h1>
+            Chat:
+        </h1>
+        <ul id='messages'>
+
+        </ul>
+        <form action="">
+            <input id='inputMessage'/>
+            <button>enviar</button>
+        </form>
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        const socket = io.connect('/')
+
+        socket.on('contador', count => {
+            console.log(count);
+        })
+
+        socket.on('nova msg', msg => {
+            $('#messages').append($('<li>').text(msg))
+        })
+
+        $('form').submit(e => {
+            e.preventDefault()
+            let msg = $('#inputMessage').val()
+            socket.emit('enviar msg', msg)
+            $('#messages').append($('<li>').text(msg))
+            $('#inputMessage').val('')
+        })
+    </script>
+</html>
