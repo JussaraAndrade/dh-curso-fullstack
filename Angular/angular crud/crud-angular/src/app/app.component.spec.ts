@@ -16,26 +16,18 @@ describe('AppComponent', () => {
       ],
     }).compileComponents();
   });
-  // Primeiroa teste
+
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    // Espera o app ele seja true
     expect(app).toBeTruthy();
   });
 
-  // Segundo teste
   it(`should have as title 'crud-angular'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('crud-angular');
   });
-
-  it('should return isOpen is false', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.isOpen).toBe(false);
-  })
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);

@@ -9,10 +9,10 @@ describe('UsersService', () => {
 
   const mockResponse = [{
     id: 1,
-    nome: 'Juca',
-    sobrenome: 'Andrade',
+    nome: "Ivonaldo",
+    sobrenome: "Soares",
     idade: 26,
-    profissao: "Programador"
+    profissao: "Professor"
   }];
 
   beforeEach(() => {
@@ -20,20 +20,19 @@ describe('UsersService', () => {
       imports: [
         HttpClientModule,
         HttpClientTestingModule
-
       ]
     });
     service = TestBed.inject(UsersService);
   });
 
-  it('should be return response users', () => {
+  it('should be return response users', ()=> {
     service.getUsers().subscribe(response => {
       expect(response).toEqual(mockResponse);
     })
   })
 
-  it('should be return user response', () => {
-    service.getUser('Juca').subscribe(response => {
+  it('should be return user reponse', ()=> {
+    service.getUser('Ivonaldo').subscribe(response => {
       expect(response).toEqual(mockResponse);
     })
   })
