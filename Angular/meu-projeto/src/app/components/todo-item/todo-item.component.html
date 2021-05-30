@@ -1,0 +1,5 @@
+<p>
+  <span [ngClass]="{textdone: done }" >Task - {{ todo.id }} {{todo.text}} </span>
+  <button class="btn btn-success btn-sm ml-2 m-2" (click)="markAsDone()" >&#10003;</button>
+  <button class="btn btn-danger btn-sm ml-2" (click)="removeTodo()">Remover</button>
+</p>
